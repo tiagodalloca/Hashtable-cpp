@@ -10,11 +10,16 @@ class Hashtable{
 
  public:
 	 Hashtable();
+	 Hashtable(	unsigned int initial_length, 
+							unsigned int growth_rate, 
+							unsigned int occupation_rate, 
+							unsigned int conflict_tree_max_size, 
+							unsigned int max_maximized_tree_count);
 	 ~Hashtable();
 	 
-	 IHashble* insert();
+	 void insert();
 	 IHashble* get();
-	 bool remove(IHashble*);
+	 char remove(IHashble* o);
 
  private:
 	 unsigned int length;
