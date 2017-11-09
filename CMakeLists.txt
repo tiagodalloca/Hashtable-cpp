@@ -34,6 +34,6 @@ foreach (FILE ${ALL})
   message (${FILE}) 
 endforeach (FILE)
 
-add_executable(main_arvore src/main.cpp)
-target_link_libraries(main_arvore lib)
+add_executable(main_hash src/main.cpp)
+target_link_libraries(main_hash lib)
 
