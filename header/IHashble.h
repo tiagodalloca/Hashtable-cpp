@@ -5,9 +5,9 @@
 
 using namespace std;
 
-class IHASHBLE{
+class IHashble{
  public:
-	virtual hashcode() = 0;
+	virtual unsigned int hashcode() = 0;
 };
 
 #endif //IHASHBLE

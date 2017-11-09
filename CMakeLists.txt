@@ -22,7 +22,7 @@ set (HEADERS
 
 set (SRC
 	src/main.cpp
-	header/Hashtable.cpp
+	src/Hashtable.cpp
 )
 
 set (ALL ${HEADERS} ${SRC})

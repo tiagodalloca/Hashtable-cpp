@@ -3,7 +3,6 @@
 
 #include <stdlib.h>
 #include <string>
-#include <stack>
 
 #define max(n1,n2) (n1 > n2 ? n1 : n2)
 #define height(n) (n == NULL ? 0 : n->h)
@@ -13,24 +12,6 @@ using namespace std;
 
 template<typename T>
 class Arvore{
-		
-	typedef struct StackFrameToString{
-		const struct Arvore<T>::Node *no;
-		std::string *str;
-		char position;
-	} StackFrameToString;
-
-	typedef struct StackFrameRemove {
-		struct Arvore<T>::Node *root;
-		T o;
-		char retorno;
-		char position;
-	} StackFrameRemove;
-
-	typedef struct StackFrameDestructor {
-		struct Arvore<T>::Node *root;
-		char position;
-	}StackFrameDestructor;
 
 	struct Node{
 		T info;
@@ -47,17 +28,106 @@ class Arvore{
   Arvore(const Arvore<T> *a);
   unsigned int getCount() const;
   unsigned int getHeight() const;
-	T* get(T o);
+	T get(T o) const;
 
-	template <typename U>
-  friend ostream& operator<< (ostream&, const Arvore<U>&);
-	template <typename U>
-  friend istream& operator >> (istream&, Arvore<U>&);
+  friend ostream& operator<< (ostream&, const Arvore<T>&);
+  friend istream& operator >> (istream&, Arvore<T>&);
 
 
 	void insert(T o);
-	void remove(T o);	
-	int remove_Node(Node *raiz, T o);
+	void remove(T o);
+
+
+	int remove_Node(Node *raiz, T o) {
+		if (raiz == NULL)
+			return 0;
+		int res;
+		if (o < raiz->info)
+		{
+			if ((res = remove_Node(raiz->l, o)) == 1) {
+				raiz->h = max(height(raiz->l), height(raiz->r)) + 1;
+				int befao = bf(raiz);
+				if (befao < -1)
+				{
+					if (height(raiz->r->l) <= height(raiz->r->r))
+						rotateLeft(raiz);
+					else
+					{
+						rotateRight(raiz->r);
+						rotateLeft(raiz);
+					}
+				}
+			}
+
+		}
+
+		if (o > raiz->info)
+		{
+			if ((res = remove_Node(raiz->r, o)) == 1) {
+				raiz->h = max(height(raiz->l), height(raiz->r)) + 1;
+				int befao = bf(raiz);
+				if (befao > 1)
+				{
+					if (height(raiz->l->r) <= height(raiz->l->l))
+						rotateLeft(raiz);
+					else
+					{
+						rotateRight(raiz->r);
+						rotateLeft(raiz);
+					}
+				}
+			}
+		}
+
+		if (raiz->info == o)
+		{
+			if (raiz->l == NULL || raiz->r == NULL)
+			{
+				struct Node *old = raiz;
+				if (raiz->l != NULL)
+					raiz = raiz->l;
+				else
+				{
+					Node* pai = raiz->p;
+					raiz = raiz->r;
+					if (raiz != NULL)
+					{
+						raiz->h = max(height(raiz->l), height(raiz->r)) + 1;
+						raiz->p = pai;
+					}						
+				}
+					
+				freeNode(old, raiz);
+				
+			}
+			else
+			{
+				struct Node *no1 = raiz->r;
+				struct Node *no2 = raiz->r->l;
+				while (no2 != NULL) {
+					no1 = no2;
+					no2 = no2->l;
+				}
+				struct Node* temp = no1;
+				raiz->info = temp->info;
+				remove_Node(raiz->r, temp->info);
+				int befao = bf(raiz);
+				if (befao > 1)
+				{
+					if (height(raiz->l->r) <= height(raiz->l->l))
+						rotateRight(raiz);
+					else
+					{
+						rotateLeft(raiz->l);
+						rotateRight(raiz);
+					}
+				}
+				raiz->h = max(height(raiz->l), height(raiz->r)) + 1;
+			}
+			return 1;
+		}
+		return res;
+	}
 	std::string toString() const;
 	Node *root;
 	
@@ -89,155 +159,6 @@ unsigned int Arvore<T>::getHeight() const{
 }
 
 template<typename T>
-int Arvore<T>::remove_Node(Node *raiz, T o) {
-	int ret = 1;
-	std::stack<StackFrameRemove> stack = std::stack<StackFrameRemove>();
-	StackFrameRemove sfr;
-
-	inicio:
-	if (raiz == NULL)
-	{
-		ret = 0;
-		goto doReturn;
-	}
-
-	if (o < raiz->info)
-	{
-		sfr.root = raiz;
-		sfr.o = o;
-		sfr.retorno = ret;
-		sfr.position = 1;
-		stack.push(sfr);
-
-		raiz = raiz->l;
-		goto inicio;
-
-		retorno1:
-		if (ret == 1) {
-			raiz->h = max(height(raiz->l), height(raiz->r)) + 1;
-			int befao = bf(raiz);
-			if (befao < -1)
-			{
-				if (height(raiz->r->l) <= height(raiz->r->r))
-					rotateLeft(raiz);
-				else
-				{
-					rotateRight(raiz->r);
-					rotateLeft(raiz);
-				}
-			}
-		}
-	}
-
-	if (o > raiz->info)
-	{
-		sfr.root = raiz;
-		sfr.retorno = ret;
-		sfr.o = o;
-		sfr.position = 2;
-		stack.push(sfr);
-
-		raiz = raiz->r;
-		goto inicio;
-
-		retorno2:
-		if (ret == 1) {
-			raiz->h = max(height(raiz->l), height(raiz->r)) + 1;
-			int befao = bf(raiz);
-			if (befao > 1)
-			{
-				if (height(raiz->l->r) <= height(raiz->l->l))
-					rotateLeft(raiz);
-				else
-				{
-					rotateRight(raiz->r);
-					rotateLeft(raiz);
-				}
-			}
-		}
-	}
-
-	if (raiz->info == o)
-	{
-		if (raiz->l == NULL || raiz->r == NULL)
-		{
-			struct Node *old = raiz;
-			if (raiz->l != NULL)
-				raiz = raiz->l;
-			else
-			{
-				Node* pai = raiz->p;
-				raiz = raiz->r;
-				if (raiz != NULL)
-				{
-					raiz->h = max(height(raiz->l), height(raiz->r)) + 1;
-					raiz->p = pai;
-				}
-			}
-
-			freeNode(old, raiz);
-
-		}
-		else
-		{
-			struct Node *no1 = raiz->r;
-			struct Node *no2 = raiz->r->l;
-			while (no2 != NULL) {
-				no1 = no2;
-				no2 = no2->l;
-			}
-			struct Node* temp = no1;
-			raiz->info = temp->info;
-
-			sfr.root = raiz;
-			sfr.retorno = ret;
-			sfr.o = o;
-			sfr.position = 3;
-			stack.push(sfr);
-
-			raiz = raiz->r;
-			o = temp->info;
-			goto inicio;
-
-			retorno3:
-			int befao = bf(raiz);
-			if (befao > 1)
-			{
-				if (height(raiz->l->r) <= height(raiz->l->l))
-					rotateRight(raiz);
-				else
-				{
-					rotateLeft(raiz->l);
-					rotateRight(raiz);
-				}
-			}
-			raiz->h = max(height(raiz->l), height(raiz->r)) + 1;
-		}
-		ret = 1;
-		goto doReturn;
-	}
-
-	doReturn:
-	if (stack.empty())
-		return ret;
-
-	sfr = stack.top();
-	stack.pop();
-	raiz = sfr.root;
-	ret = sfr.retorno;
-	o = sfr.o;
-
-	if (sfr.position == 1)
-		goto retorno1;
-	else if (sfr.position == 2)
-		goto retorno2;
-	else if (sfr.position == 3)
-		goto retorno3;
-	else 
-		goto inicio;
-}
-
-template<typename T>
 unsigned int Arvore<T>::getCount() const{
 	return count;
 }
@@ -262,69 +183,23 @@ std::string Arvore<T>::toString() const{
 }
 
 template<typename T>
-std::string Arvore<T>::toStringAux(const Node *no) const{
+std::string Arvore<T>::toStringAux(const Node *no) const {
 
-	std::stack<StackFrameToString> stack = std::stack<StackFrameToString> ();
+	std::string str = "";
 	
-	StackFrameToString sf;
-	sf.str = new std::string();
-	sf.no = &*(no);
-	sf.position = 0;
-	
-	stack.push(sf);
-	
-	for(; !stack.empty(); sf = stack.top(), stack.pop()){
+	if (no != NULL){
+		str += "(";
 		
-		std::string s;
-		
-		StackFrameToString temp;
-		
-		if (sf.no != NULL){
-			
-			switch(sf.position){
-				case 0:
-					goto pos0;
-					break;
-					
-				case 1:
-					goto pos1;
-					break;
-					
-				case 2:
-					goto pos2;
-					break;
-					
-				default:
-					goto pos0;
-					break;
-			}
-			
-			pos0:
-			sf.str->append("(");
-			temp.no = sf.no->l;
-			temp.str = sf.str;
-			temp.position = 0;
-			sf.position++;
-			stack.push(sf);
-			stack.push(temp);
-			continue;
+		str += toStringAux(no->l);
 
-			pos1:
-			sf.str->operator +=(sf.no->info);
-			temp.no = sf.no->r;
-			temp.str = sf.str;
-			temp.position = 0;
-			sf.position++;
-			stack.push(sf);
-			stack.push(temp);
-			continue;
-			
-			pos2:
-			sf.str->append(")");
-		}
+		str += no->info;
+
+		str += toStringAux(no->r);
+
+		str += ")";
 	}
-	
-	return *sf.str;
+
+	return str;
 }
 
 template<typename T>
@@ -337,41 +212,13 @@ Arvore<T>::~Arvore(){
 template<typename T>
 void Arvore<T>::arvore_Destrutor(struct Node *raiz)
 {
-	std::stack<StackFrameDestructor> stack = std::stack<StackFrameDestructor>();
-	StackFrameDestructor sfd;
-	inicio:
 	if (raiz != NULL)
 	{
-		sfd.root = raiz;
-		sfd.position = 1;
-		stack.push(sfd);
-
-		raiz = raiz->l;
-		goto inicio;
-
-		pos1:
-		sfd.root = raiz;
-		sfd.position = 2;
-		stack.push(sfd);
-
-		raiz = raiz->r;
-		goto inicio;
-
-		pos2:
+		arvore_Destrutor(raiz->l);
+		arvore_Destrutor(raiz->r);
 		free(raiz) ;
 		raiz = NULL;
 	}
-	if (!stack.empty())
-	{
-		sfd = stack.top();
-		stack.pop();
-		raiz = sfd.root;	
-		if (sfd.position == 1)
-			goto pos1;
-		else if (sfd.position == 2)
-			goto pos2;
-	}
-
 }
 
 //template<typename T>
@@ -387,14 +234,14 @@ void Arvore<T>::arvore_Destrutor(struct Node *raiz)
 
 
 template<typename T>
-T* Arvore<T>::get(T o){
+T Arvore<T>::get(T o) const{
 	Node *no = root;
 	
 	while(no != NULL){
-		if (no->info > o)
+		if (o > no->info)
 			no = no->r;
 		
-		else if (no->info <  o)
+		else if (o < no->info)
 			no = no->l;
 
 		else
@@ -402,9 +249,10 @@ T* Arvore<T>::get(T o){
 	}
 	
 	if (no != NULL)
-		return &(no->info);
+		return no->info;
 	
-	return NULL;
+	T t;
+	return t;
 }
 
 template<typename T>
