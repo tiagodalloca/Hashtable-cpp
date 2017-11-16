@@ -17,7 +17,7 @@ Hashtable::Hashtable(	unsigned int initial_length,
 	max_occupation_rate = initial_max_occupation_rate;
 	max_tree_size = initial_max_tree_size;
 	max_exceeded_trees = initial_max_exceeded_trees;
-	the_array = (Arvore<IHashble*>*)malloc(length * sizeof(Arvore<IHashble*>));
+	the_array = (Arvore<IHashble*>**)malloc(length * sizeof(Arvore<IHashble*>));
 	count = 0;
 }
 
@@ -29,7 +29,11 @@ Hashtable::~Hashtable(){
 void Hashtable::insert(IHashble* o) {
 	unsigned int hash = o->hashcode();
 	unsigned int place_to_go = hash % length;
-	the_array[place_to_go].insert(o);
+	
+	if (the_array[place_to_go] == NULL)
+		the_array[place_to_go] = new Arvore<IHashble*>();
+	
+	the_array[place_to_go]->insert(o);
 	count++;
 }
 
@@ -37,15 +41,19 @@ void Hashtable::insert(IHashble* o) {
 IHashble* Hashtable::get(IHashble* o){
 	unsigned int hash = o->hashcode();
 	unsigned int place_to_get = hash % length;
-	return the_array[place_to_get].get(o);
+	
+	if (the_array[place_to_get] == NULL)
+		return NULL;
+	
+	return the_array[place_to_get]->get(o);
 }
 
 
 void Hashtable::remove(IHashble* o){
 	unsigned int hash = o->hashcode();
 	unsigned int place_to_remove = hash % length;
-  Arvore<IHashble*> tree = the_array[place_to_remove];
-	if (tree.getCount() > 0)
-		tree.remove(o);
+  Arvore<IHashble*>* tree = the_array[place_to_remove];
+	if (tree != NULL)
+		tree->remove(o);
 }
 

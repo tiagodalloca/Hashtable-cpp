@@ -30,7 +30,7 @@ class Hashtable{
 	 unsigned int max_tree_size;//max number of elements inside a tree
 	 unsigned int max_exceeded_trees;//max number of trees that exceed the max_tree_size
 	 
-	 Arvore<IHashble*>* the_array;//array of trees that represents the hashtable
+	 Arvore<IHashble*>** the_array;//array of trees that represents the hashtable
 };
 
 #endif //HASHTABLE

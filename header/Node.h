@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <string>
 
+#include "IHashble.h"
+
 #define max(n1,n2) (n1 > n2 ? n1 : n2)
 #define height(n) (n == NULL ? 0 : n->h)
 #define bf(n) (height(n->l) - height(n->r))
@@ -11,7 +13,7 @@
 using namespace std;
 
 template<typename T>
-class Node : IHashble{
+class Node : public IHashble{
 
 public:
 	T* info;
@@ -55,32 +57,32 @@ unsigned int Node<T>::hashcode(){
 
 template<typename T>
 bool Node<T>::operator== (const Node<T> &n){
-	return n.i == i;
+	return n.hashcode() == hashcode();
 }
 
 template<typename T>
 bool Node<T>::operator> (const Node<T> &n){
-	return n.i > i;
+	return n.hashcode() > hashcode();
 }
 
 template<typename T>
 bool Node<T>::operator< (const Node<T> &n){
-	return n.i < i;
+	return n.hashcode()  < hashcode();
 }
 
 template<typename T>
 bool Node<T>::operator<= (const Node<T> &n){
-	return n == this || n < this;
+	return n.hashcode() == hashcode() || n.hashcode() < hashcode();
 }
 
 template<typename T>
 bool Node<T>::operator>= (const Node<T> &n){
-	return n == this || n > this;
+	return n.hashcode() == hashcode() || n.hashcode() > hashcode();
 }
 
 template<typename T>
 bool Node<T>::operator!= (const Node<T> &n){
-	return !(n.i == i );
+	return !(n.hashcode() == hashcode());
 }
 
 #endif //NODE	
