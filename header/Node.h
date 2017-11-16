@@ -11,15 +11,17 @@
 using namespace std;
 
 template<typename T>
-class Node{
+class Node : IHashble{
 
 public:
-	T info;
-	unsigned int i;
+	T* info;
+	IHashble* key;
 	
-	Node(T o, int i);
-	Node(int i);
+	Node(T* to, IHashble* ho);
+	Node(IHashble* ho);
 	Node();
+	
+	unsigned int hashcode();
 	
 	bool operator== (const Node<T> &n);
 	bool operator> (const Node<T> &n);
@@ -31,19 +33,24 @@ public:
 };
 
 template<typename T>
-Node<T>::Node(T o, int i){
-	info = o;
-	this->i = i;
+Node<T>::Node(T* to, IHashble* ho){
+	info = to;
+	key = ho;
 }
 
 template<typename T>
-Node<T>::Node(int i){
-	this->i = i;
+Node<T>::Node(IHashble* ho){
+	Node(NULL, ho);
 }
 
 template<typename T>
 Node<T>::Node(){
-	this->i = -1;
+	Node(NULL, NULL);
+}
+
+template<typename T>
+unsigned int Node<T>::hashcode(){
+	key->hashcode();
 }
 
 template<typename T>
