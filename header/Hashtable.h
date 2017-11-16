@@ -17,9 +17,9 @@ class Hashtable{
 					unsigned int initial_max_exceeded_trees);
 	 ~Hashtable();
 	 
-	 void insert();
-	 IHashble* get();
-	 char remove(IHashble* o);
+	 void insert(IHashble* o);
+	 IHashble* get(IHashble* o);
+	 void remove(IHashble* o);
 
  private:
 	 unsigned int length; //vector length
