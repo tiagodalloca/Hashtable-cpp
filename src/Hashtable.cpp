@@ -17,7 +17,7 @@ Hashtable::Hashtable(	unsigned int initial_length,
 	max_occupation_rate = initial_max_occupation_rate;
 	max_tree_size = initial_max_tree_size;
 	max_exceeded_trees = initial_max_exceeded_trees;
-	the_array = (Arvore<IHashble*>**)malloc(length * sizeof(Arvore<IHashble*>));
+	the_array = (Arvore**)malloc(length * sizeof(Arvore));
 	count = 0;
 }
 
@@ -31,7 +31,7 @@ void Hashtable::insert(IHashble* o) {
 	unsigned int place_to_go = hash % length;
 	
 	if (the_array[place_to_go] == NULL)
-		the_array[place_to_go] = new Arvore<IHashble*>();
+		the_array[place_to_go] = new Arvore();
 	
 	the_array[place_to_go]->insert(o);
 	count++;
@@ -52,8 +52,13 @@ IHashble* Hashtable::get(IHashble* o){
 void Hashtable::remove(IHashble* o){
 	unsigned int hash = o->hashcode();
 	unsigned int place_to_remove = hash % length;
-  Arvore<IHashble*>* tree = the_array[place_to_remove];
-	if (tree != NULL)
+  Arvore* tree = the_array[place_to_remove];
+	if (tree != NULL){
 		tree->remove(o);
+		if (tree->getCount() == 0){
+			//delete[]tree;
+			the_array[place_to_remove] = NULL;
+		}
+	}
 }
 

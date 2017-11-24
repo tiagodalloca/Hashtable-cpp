@@ -22,6 +22,7 @@ set (HEADERS
 
 set (SRC
 	src/main.cpp
+	src/Arvore.cpp	
 	src/Hashtable.cpp
 )
 

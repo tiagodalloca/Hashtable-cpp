@@ -46,6 +46,18 @@ int main(){
 	
 	cout << str;
 	
+	h->remove(new stringao("asdf"));
+					
+	Node<std::string>* n = ((Node<std::string>*)
+											h->get(
+												new stringao("asdf")));
+	
+	if (n != NULL)
+		cout << (n->info);
+	
+	else
+		cout << "\n\nNão dah pra excluir algo que não existe";
+	
   return 0;
 }
 
