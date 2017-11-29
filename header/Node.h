@@ -52,7 +52,7 @@ Node<T>::Node(){
 
 template<typename T>
 unsigned int Node<T>::hashcode(){
-	key->hashcode();
+	return key->hashcode();
 }
 
 template<typename T>

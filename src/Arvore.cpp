@@ -8,34 +8,39 @@
 #define height(n) (n == NULL ? 0 : n->h)
 #define bf(n) (height(n->l) - height(n->r))
 
-Arvore::Arvore(){
-  root = NULL; 
-	count= 0;
+Arvore::Arvore() {
+	root = NULL;
+	count = 0;
+	ind = 0;
 }
 
-Arvore::Arvore(const Arvore *a){
-	
+Arvore::Arvore(const Arvore *a) {
+
 }
 
-unsigned int Arvore::getHeight() const{
+unsigned int Arvore::getHeight() const {
 	return height(root);
 }
 
-unsigned int Arvore::getCount() const{
+unsigned int Arvore::getCount() const {
 	return count;
 }
 
-std::string Arvore::toString() const{
+unsigned int Arvore::getInd() const {
+	return ind;
+}
+
+std::string Arvore::toString() const {
 	return toStringAux(root);
 }
 
 std::string Arvore::toStringAux(const Node *no) const {
 
 	std::string str = "";
-	
-	if (no != NULL){
+
+	if (no != NULL) {
 		str += "(";
-		
+
 		str += toStringAux(no->l);
 
 		str += no->info->hashcode();
@@ -48,10 +53,31 @@ std::string Arvore::toStringAux(const Node *no) const {
 	return str;
 }
 
-Arvore::~Arvore(){
+IHashble** Arvore::getElements() {
+	IHashble** aux = (IHashble**)malloc(sizeof(Arvore*));
+	ind = 0;
+	getElementsAux(root, aux);
+	return aux;
+}
+
+Arvore::~Arvore() {
 
 	arvore_Destrutor(root);
 
+}
+
+void Arvore::getElementsAux(const Node *no, IHashble** aux) {
+
+	if (no != NULL) {
+
+		getElementsAux(no->l, aux);
+
+		IHashble* ih = no->info;
+		aux[ind++] = ih; //DEU RUIM 
+
+		getElementsAux(no->r, aux);
+
+	}
 }
 
 void Arvore::arvore_Destrutor(struct Node *raiz)
@@ -60,36 +86,36 @@ void Arvore::arvore_Destrutor(struct Node *raiz)
 	{
 		arvore_Destrutor(raiz->l);
 		arvore_Destrutor(raiz->r);
-		free(raiz) ;
+		free(raiz);
 		raiz = NULL;
 	}
 }
 
-IHashble* Arvore::get(IHashble* o) const{
+IHashble* Arvore::get(IHashble* o) const {
 	Node *no = root;
-	
-	while(no != NULL){
+
+	while (no != NULL) {
 		if (o->hashcode() > no->info->hashcode())
 			no = no->r;
-		
+
 		else if (o->hashcode() < no->info->hashcode())
 			no = no->l;
 
 		else
 			break;
 	}
-	
+
 	if (no != NULL)
 		return no->info;
-	
+
 	return NULL;
 }
 
-void Arvore::remove(IHashble* o){
+void Arvore::remove(IHashble* o) {
 	remove_Node(root, o);
 }
 
-void Arvore::copyNode(Node *n1, Node* n2){
+void Arvore::copyNode(Node *n1, Node* n2) {
 	n2->l = n1->l;
 	n2->r = n1->r;
 	n2->p = n1->p;
@@ -103,34 +129,34 @@ void Arvore::freeNode(Node *n1, Node* noR) {
 			if (n1->p->l->info == n1->info)
 				n1->p->l = noR;
 
-		if(n1->p->r != NULL)
+		if (n1->p->r != NULL)
 			if (n1->p->r->info == n1->info)
 				n1->p->r = noR;
 	}
-	
+
 	free(n1);
 	count--;
 }
 
-void Arvore::rotateRight(Node *y){
-	Node* temp = (Node*) malloc(sizeof(Node));
+void Arvore::rotateRight(Node *y) {
+	Node* temp = (Node*)malloc(sizeof(Node));
 	copyNode(y, temp);
-	
+
 	Node* x = y->l;
 	Node* xr = x->r;
 	Node* yp = y->p;
 	copyNode(x, y);
 	y->p = yp;
-	
-	if(y->l != NULL)
+
+	if (y->l != NULL)
 		y->l->p = y;
-	
+
 	copyNode(temp, x);
 	y->r = x;
 	x->p = y;
-	
+
 	x->l = xr;
-	
+
 	if (xr != NULL)
 		xr->p = x;
 
@@ -139,32 +165,32 @@ void Arvore::rotateRight(Node *y){
 
 	if (x->r != NULL)
 		x->r->p = x;
-	
-	x->h = max(height(x->l),height(x->r)) + 1;
-	y->h = max(height(x->l),height(x->r)) + 1;
+
+	x->h = max(height(x->l), height(x->r)) + 1;
+	y->h = max(height(x->l), height(x->r)) + 1;
 
 	delete temp;
 }
 
-void Arvore::rotateLeft(Node *x){
-	Node* temp = (Node*) malloc(sizeof(Node));
+void Arvore::rotateLeft(Node *x) {
+	Node* temp = (Node*)malloc(sizeof(Node));
 	copyNode(x, temp);
-	
+
 	Node* y = x->r;
 	Node* yl = y->l;
 	Node* xp = x->p;
 	copyNode(y, x);
 	x->p = xp;
-	
+
 	if (x->r != NULL)
 		x->r->p = x;
-	
+
 	copyNode(temp, y);
 	x->l = y;
 	y->p = x;
-	
+
 	y->r = yl;
-	
+
 	if (yl != NULL)
 		yl->p = y;
 
@@ -173,18 +199,18 @@ void Arvore::rotateLeft(Node *x){
 
 	if (y->r != NULL)
 		y->r->p = y;
-	
-	y->h = max(height(y->l),height(y->r)) + 1;
-	x->h = max(height(x->l),height(x->r)) + 1;
+
+	y->h = max(height(y->l), height(y->r)) + 1;
+	x->h = max(height(x->l), height(x->r)) + 1;
 
 	delete temp;
 }
 
-void Arvore::insert(IHashble* o){
+void Arvore::insert(IHashble* o) {
 	Node *no = root;
-	
-	if (root == NULL){
-		root = (Node*) malloc(sizeof(Node));
+
+	if (root == NULL) {
+		root = (Node*)malloc(sizeof(Node));
 		root->p = NULL;
 		root->l = NULL;
 		root->r = NULL;
@@ -195,15 +221,15 @@ void Arvore::insert(IHashble* o){
 	}
 
 	else
-		while(1){
-			if (o->hashcode() < no->info->hashcode()){
-				if (no->l == NULL){
-					no->l =	(Node*) malloc(sizeof(Node));
+		while (1) {
+			if (o->hashcode() < no->info->hashcode()) {
+				if (no->l == NULL) {
+					no->l = (Node*)malloc(sizeof(Node));
 					no->l->info = o;
 					no->l->l = NULL;
 					no->l->r = NULL;
 					no->l->p = no;
-					
+
 					no = no->l;
 					count++;
 					break;
@@ -212,14 +238,14 @@ void Arvore::insert(IHashble* o){
 				continue;
 			}
 
-			if (o->hashcode() > no->info->hashcode()){
-				if (no->r == NULL){
-					no->r =	(Node*) malloc(sizeof(Node));
+			if (o->hashcode() > no->info->hashcode()) {
+				if (no->r == NULL) {
+					no->r = (Node*)malloc(sizeof(Node));
 					no->r->info = o;
 					no->r->l = NULL;
 					no->r->r = NULL;
 					no->r->p = no;
-					
+
 					no = no->r;
 					count++;
 					break;
@@ -227,48 +253,48 @@ void Arvore::insert(IHashble* o){
 
 				no = no->r;
 				continue;
-			 }
+			}
 
 			return;
 		}
 
 	Node* nop = no;
-	
-	while(no != NULL){
-		no->h = max(height(no->l),height(no->r)) + 1;
+
+	while (no != NULL) {
+		no->h = max(height(no->l), height(no->r)) + 1;
 
 		int balanceF = bf(no);
-		
-		if (balanceF > 1){
-		 	if(o->hashcode() < no->l->info->hashcode()){
-		 		rotateRight(no);
-		 	}
 
-		 	else{
-		 		rotateLeft(no->l);
+		if (balanceF > 1) {
+			if (o->hashcode() < no->l->info->hashcode()) {
 				rotateRight(no);
 			}
-			
+
+			else {
+				rotateLeft(no->l);
+				rotateRight(no);
+			}
+
 			continue;
 		}
 
-		else if (balanceF < -1){
-		 	if(o->hashcode() > no->r->info->hashcode()){
-		 		rotateLeft(no);
-		 	}
-
-		 	else{
-		 		rotateRight(no->r);
+		else if (balanceF < -1) {
+			if (o->hashcode() > no->r->info->hashcode()) {
 				rotateLeft(no);
 			}
-			
+
+			else {
+				rotateRight(no->r);
+				rotateLeft(no);
+			}
+
 			continue;
 		}
-		
-		
+
+
 		nop = no;
 		no = no->p;
 	}
-	
+
 	root = nop;
 }

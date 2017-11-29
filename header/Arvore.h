@@ -12,9 +12,9 @@
 
 using namespace std;
 
-class Arvore{
+class Arvore {
 
-	struct Node{
+	struct Node {
 		IHashble* info;
 		Node *l;
 		Node *r;
@@ -22,13 +22,15 @@ class Arvore{
 
 		unsigned int h;
 	};
- public:
-  Arvore();
-  ~Arvore();
-  void arvore_Destrutor(struct Node* raiz);
-  Arvore(const Arvore *a);
-  unsigned int getCount() const;
-  unsigned int getHeight() const;
+public:
+	Arvore();
+	~Arvore();
+	void arvore_Destrutor(struct Node* raiz);
+	Arvore(const Arvore *a);
+	unsigned int getCount() const;
+	unsigned int getInd() const;
+	unsigned int getHeight() const;
+	IHashble** getElements();
 	IHashble* get(IHashble* o) const;
 
 	void insert(IHashble* o);
@@ -91,11 +93,11 @@ class Arvore{
 					{
 						raiz->h = max(height(raiz->l), height(raiz->r)) + 1;
 						raiz->p = pai;
-					}						
+					}
 				}
-					
+
 				freeNode(old, raiz);
-				
+
 			}
 			else
 			{
@@ -127,12 +129,13 @@ class Arvore{
 	}
 	std::string toString() const;
 	Node *root;
-	
- protected:
+
+protected:
 
 	unsigned int count;
+	unsigned int ind;
 	std::string toStringAux(const Node *no) const;
-	
+	void getElementsAux(const Node* no, IHashble** aux);
 	void rotateLeft(Node *x);
 	void rotateRight(Node *y);
 	void copyNode(Node *n1, Node *n2);
