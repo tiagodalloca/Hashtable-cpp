@@ -8,9 +8,11 @@
 #define height(n) (n == NULL ? 0 : n->h)
 #define bf(n) (height(n->l) - height(n->r))
 
+
 Arvore::Arvore(){
   root = NULL; 
 	count= 0;
+	indice = 0;
 }
 
 Arvore::Arvore(const Arvore *a){
@@ -25,10 +27,33 @@ unsigned int Arvore::getCount() const{
 	return count;
 }
 
+unsigned int Arvore::getIndice() const{
+	return indice;
+}
+
+
+IHashble* Arvore::getElements() {
+	IHashble* aux;
+	getElementsAux(root,aux);
+	return aux;
+}
+
 std::string Arvore::toString() const{
 	return toStringAux(root);
 }
 
+void Arvore::getElementsAux(const Node *no,IHashble* aux) {
+	
+	if (no != NULL) {
+
+		getElementsAux(no->l,aux);
+
+		aux[indice++] = *no->info; //talvez de ruim
+
+		getElementsAux(no->r,aux);
+
+	}
+}
 std::string Arvore::toStringAux(const Node *no) const {
 
 	std::string str = "";
@@ -47,6 +72,8 @@ std::string Arvore::toStringAux(const Node *no) const {
 
 	return str;
 }
+
+
 
 Arvore::~Arvore(){
 

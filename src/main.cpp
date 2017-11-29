@@ -26,8 +26,8 @@ class stringao : public IHashble, public std::string{
 int main(){
 	Hashtable* h = new Hashtable(
 					10, //unsigned int initial_length,
-					10, //unsigned int initial_growth_rate,
-					30, //unsigned int initial_max_occupation_rate,
+					2, //float initial_growth_rate,
+					0.8f, //float initial_max_occupation_rate,
 					3,  //unsigned int initial_max_tree_size,
 					10  //unsigned int initial_max_exceeded_trees
 					);
@@ -53,10 +53,11 @@ int main(){
 												new stringao("asdf")));
 	
 	if (n != NULL)
-		cout << (n->info);
-	
+		cout << (n->info);	
 	else
-		cout << "\n\nNão dah pra excluir algo que não existe";
+		cout << "\n\nNao dah pra excluir algo que nao existe";
+
+	cin >> str;
 	
   return 0;
 }
