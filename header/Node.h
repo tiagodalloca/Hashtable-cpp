@@ -3,7 +3,6 @@
 
 #include <stdlib.h>
 #include <string>
-
 #include "IHashble.h"
 
 #define max(n1,n2) (n1 > n2 ? n1 : n2)

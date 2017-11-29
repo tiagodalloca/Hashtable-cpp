@@ -6,6 +6,7 @@
 
 using namespace std;
 
+
 class Hashtable {
 
 public:
@@ -34,6 +35,7 @@ private:
 	unsigned int max_exceeded_trees;//max number of trees that exceed the max_tree_size
 
 	Arvore** the_array;//array of trees that represents the hashtable
+
 };
 
 #endif //HASHTABLE

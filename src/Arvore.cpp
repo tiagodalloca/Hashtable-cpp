@@ -297,4 +297,5 @@ void Arvore::insert(IHashble* o) {
 	}
 
 	root = nop;
+
 }
