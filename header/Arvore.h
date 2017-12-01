@@ -14,18 +14,18 @@ using namespace std;
 
 class Arvore {
 
-	struct Node {
+	struct NodeA {
 		IHashble* info;
-		Node *l;
-		Node *r;
-		Node *p;
+		NodeA *l;
+		NodeA *r;
+		NodeA *p;
 
 		unsigned int h;
 	};
 public:
 	Arvore();
 	~Arvore();
-	void arvore_Destrutor(struct Node* raiz);
+	void arvore_Destrutor(struct NodeA* raiz);
 	Arvore(const Arvore *a);
 	unsigned int getCount() const;
 	unsigned int getInd() const;
@@ -37,7 +37,7 @@ public:
 	void remove(IHashble* o);
 
 
-	int remove_Node(Node *raiz, IHashble* o) {
+	int remove_Node(NodeA *raiz, IHashble* o) {
 		if (raiz == NULL)
 			return 0;
 		int res;
@@ -82,12 +82,12 @@ public:
 		{
 			if (raiz->l == NULL || raiz->r == NULL)
 			{
-				struct Node *old = raiz;
+				struct NodeA *old = raiz;
 				if (raiz->l != NULL)
 					raiz = raiz->l;
 				else
 				{
-					Node* pai = raiz->p;
+					NodeA* pai = raiz->p;
 					raiz = raiz->r;
 					if (raiz != NULL)
 					{
@@ -101,13 +101,13 @@ public:
 			}
 			else
 			{
-				struct Node *no1 = raiz->r;
-				struct Node *no2 = raiz->r->l;
+				struct NodeA *no1 = raiz->r;
+				struct NodeA *no2 = raiz->r->l;
 				while (no2 != NULL) {
 					no1 = no2;
 					no2 = no2->l;
 				}
-				struct Node* temp = no1;
+				struct NodeA* temp = no1;
 				raiz->info = temp->info;
 				remove_Node(raiz->r, temp->info);
 				int befao = bf(raiz);
@@ -128,18 +128,18 @@ public:
 		return res;
 	}
 	std::string toString() const;
-	Node *root;
+	NodeA *root;
 
 protected:
 
 	unsigned int count;
 	unsigned int ind;
-	std::string toStringAux(const Node *no) const;
-	void getElementsAux(const Node* no, IHashble** aux);
-	void rotateLeft(Node *x);
-	void rotateRight(Node *y);
-	void copyNode(Node *n1, Node *n2);
-	void freeNode(Node *n1, Node* noR);
+	std::string toStringAux(const NodeA *no) const;
+	void getElementsAux(const NodeA* no, IHashble** aux);
+	void rotateLeft(NodeA *x);
+	void rotateRight(NodeA *y);
+	void copyNode(NodeA *n1, NodeA *n2);
+	void freeNode(NodeA *n1, NodeA* noR);
 };
 
 #endif

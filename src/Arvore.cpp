@@ -3,6 +3,7 @@
 #include <iostream>
 #include "Arvore.h"
 #include "IHashble.h"
+#include "Node.h"
 
 #define max(n1,n2) (n1 > n2 ? n1 : n2)
 #define height(n) (n == NULL ? 0 : n->h)
@@ -34,7 +35,7 @@ std::string Arvore::toString() const {
 	return toStringAux(root);
 }
 
-std::string Arvore::toStringAux(const Node *no) const {
+std::string Arvore::toStringAux(const NodeA *no) const {
 
 	std::string str = "";
 
@@ -43,9 +44,9 @@ std::string Arvore::toStringAux(const Node *no) const {
 
 		str += toStringAux(no->l);
 
-		str += no->info->hashcode();
-
-		str += toStringAux(no->r);
+		str += *(((Node<std::string>*)
+			no->info)
+			->info);
 
 		str += ")";
 	}
@@ -66,7 +67,7 @@ Arvore::~Arvore() {
 
 }
 
-void Arvore::getElementsAux(const Node *no, IHashble** aux) {
+void Arvore::getElementsAux(const NodeA *no, IHashble** aux) {
 
 	if (no != NULL) {
 
@@ -80,7 +81,7 @@ void Arvore::getElementsAux(const Node *no, IHashble** aux) {
 	}
 }
 
-void Arvore::arvore_Destrutor(struct Node *raiz)
+void Arvore::arvore_Destrutor(struct NodeA *raiz)
 {
 	if (raiz != NULL)
 	{
@@ -92,7 +93,7 @@ void Arvore::arvore_Destrutor(struct Node *raiz)
 }
 
 IHashble* Arvore::get(IHashble* o) const {
-	Node *no = root;
+	NodeA *no = root;
 
 	while (no != NULL) {
 		if (o->hashcode() > no->info->hashcode())
@@ -115,7 +116,7 @@ void Arvore::remove(IHashble* o) {
 	remove_Node(root, o);
 }
 
-void Arvore::copyNode(Node *n1, Node* n2) {
+void Arvore::copyNode(NodeA *n1, NodeA* n2) {
 	n2->l = n1->l;
 	n2->r = n1->r;
 	n2->p = n1->p;
@@ -123,7 +124,7 @@ void Arvore::copyNode(Node *n1, Node* n2) {
 	n2->h = n1->h;
 }
 
-void Arvore::freeNode(Node *n1, Node* noR) {
+void Arvore::freeNode(NodeA *n1, NodeA* noR) {
 	if (n1->p != NULL) {
 		if (n1->p->l != NULL)
 			if (n1->p->l->info == n1->info)
@@ -138,13 +139,13 @@ void Arvore::freeNode(Node *n1, Node* noR) {
 	count--;
 }
 
-void Arvore::rotateRight(Node *y) {
-	Node* temp = (Node*)malloc(sizeof(Node));
+void Arvore::rotateRight(NodeA *y) {
+	NodeA* temp = (NodeA*)malloc(sizeof(NodeA));
 	copyNode(y, temp);
 
-	Node* x = y->l;
-	Node* xr = x->r;
-	Node* yp = y->p;
+	NodeA* x = y->l;
+	NodeA* xr = x->r;
+	NodeA* yp = y->p;
 	copyNode(x, y);
 	y->p = yp;
 
@@ -172,13 +173,13 @@ void Arvore::rotateRight(Node *y) {
 	delete temp;
 }
 
-void Arvore::rotateLeft(Node *x) {
-	Node* temp = (Node*)malloc(sizeof(Node));
+void Arvore::rotateLeft(NodeA *x) {
+	NodeA* temp = (NodeA*)malloc(sizeof(NodeA));
 	copyNode(x, temp);
 
-	Node* y = x->r;
-	Node* yl = y->l;
-	Node* xp = x->p;
+	NodeA* y = x->r;
+	NodeA* yl = y->l;
+	NodeA* xp = x->p;
 	copyNode(y, x);
 	x->p = xp;
 
@@ -207,10 +208,10 @@ void Arvore::rotateLeft(Node *x) {
 }
 
 void Arvore::insert(IHashble* o) {
-	Node *no = root;
+	NodeA *no = root;
 
 	if (root == NULL) {
-		root = (Node*)malloc(sizeof(Node));
+		root = (NodeA*)malloc(sizeof(NodeA));
 		root->p = NULL;
 		root->l = NULL;
 		root->r = NULL;
@@ -224,7 +225,7 @@ void Arvore::insert(IHashble* o) {
 		while (1) {
 			if (o->hashcode() < no->info->hashcode()) {
 				if (no->l == NULL) {
-					no->l = (Node*)malloc(sizeof(Node));
+					no->l = (NodeA*)malloc(sizeof(NodeA));
 					no->l->info = o;
 					no->l->l = NULL;
 					no->l->r = NULL;
@@ -240,7 +241,7 @@ void Arvore::insert(IHashble* o) {
 
 			if (o->hashcode() > no->info->hashcode()) {
 				if (no->r == NULL) {
-					no->r = (Node*)malloc(sizeof(Node));
+					no->r = (NodeA*)malloc(sizeof(NodeA));
 					no->r->info = o;
 					no->r->l = NULL;
 					no->r->r = NULL;
@@ -258,7 +259,7 @@ void Arvore::insert(IHashble* o) {
 			return;
 		}
 
-	Node* nop = no;
+	NodeA* nop = no;
 
 	while (no != NULL) {
 		no->h = max(height(no->l), height(no->r)) + 1;
