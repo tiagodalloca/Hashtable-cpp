@@ -57,6 +57,7 @@ void Hashtable::grow()
 	int oldLength = length;
 	length *= growth_rate;
 	the_array = (Arvore**)malloc(length * sizeof(Arvore));
+	count = 0;
 	for (int i = 0; i < length; i++)
 	{
 		the_array[i] = NULL;
@@ -94,6 +95,19 @@ void Hashtable::insert(IHashble* o) {
 	count++;
 }
 
+std::string Hashtable::toString() const {
+	std::string aux = "[\n\n";
+	for (int i = 0; i < length; i++)
+	{
+		if (the_array[i] != NULL)
+		{
+			aux += "pos" + std::to_string(i) + ":";
+			aux += the_array[i]->toString() + "\n";
+		}
+	}
+	aux += "\n]";
+	return aux;
+}
 
 IHashble* Hashtable::get(IHashble* o) {
 	unsigned int hash = o->hashcode();
@@ -119,4 +133,6 @@ void Hashtable::remove(IHashble* o) {
 		}
 	}
 }
+
+
 

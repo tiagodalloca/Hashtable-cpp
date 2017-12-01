@@ -10,7 +10,6 @@
 class stringao : public IHashble, public std::string {
 public:
 	stringao(char* cs) : string(cs) {
-
 	}
 
 	unsigned int hashcode() {
@@ -21,6 +20,7 @@ public:
 
 		return hash;
 	}
+
 };
 
 int main() {
@@ -34,42 +34,42 @@ int main() {
 	h->
 		insert(
 			new Node<std::string>(
-				new std::string("1234"),
-				new stringao("asdf")));
+				new std::string("a"),
+				new stringao("0")));
 	h->insert
-	(new Node<std::string>(new std::string("10"), new stringao("10000")));
+	(new Node<std::string>(new std::string("b"), new stringao("1")));
 
 	h->insert
-	(new Node<std::string>(new std::string("100"), new stringao("100000")));
+	(new Node<std::string>(new std::string("c"), new stringao("2")));
 
 	h->insert
-	(new Node<std::string>(new std::string("1000"), new stringao("1000000")));
+	(new Node<std::string>(new std::string("d"), new stringao("3")));
 
 	h->insert
-	(new Node<std::string>(new std::string("10000"), new stringao("10000000")));
+	(new Node<std::string>(new std::string("e"), new stringao("4")));
 
 	h->insert
-	(new Node<std::string>(new std::string("11"), new stringao("101")));
+	(new Node<std::string>(new std::string("f"), new stringao("5")));
 
 	std::string str = *(((Node<std::string>*)
 		h->get(
-			new stringao("asdf")))
+			new stringao("0")))
 		->info);
 
 	cout << str << '\n';
 
 	std::string str2 = *(((Node<std::string>*)
 		h->get(
-			new stringao("10000")))
+			new stringao("1")))
 		->info);
 
 	cout << str2 << '\n';
 
-	h->remove(new stringao("asdf"));
+	h->remove(new stringao("0"));
 
 	Node<std::string>* n = ((Node<std::string>*)
 		h->get(
-			new stringao("asdf")));
+			new stringao("0")));
 
 	if (n != NULL)
 		cout << (n->info);
@@ -77,9 +77,20 @@ int main() {
 	else
 		cout << "\n\nNao dah pra excluir algo que nao existe";
 
-	cout << '\n' << h->count;
-	cin >> str;
+	h->insert
+	(new Node<std::string>(new std::string("300"), new stringao("300000")));
+	std::string str3 = *(((Node<std::string>*)
+		h->get(
+			new stringao("300000")))
+		->info);
 
+	cout << '\n' << str3 << '\n';
+
+	cout << '\n' << h->count;
+
+	cout << "\n\n\n\n\n\n\n" + h->toString();
+
+	cin >> str;
 
 
 	return 0;

@@ -24,6 +24,7 @@ public:
 	void remove(IHashble* o);
 	bool needToGrow();
 	void grow();
+	std::string toString() const;
 
 private:
 	unsigned int length; //vector length
