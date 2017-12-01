@@ -48,6 +48,8 @@ std::string Arvore::toStringAux(const NodeA *no) const {
 			no->info)
 			->info);
 
+		str += toStringAux(no->r);
+
 		str += ")";
 	}
 
