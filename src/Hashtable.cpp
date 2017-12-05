@@ -3,6 +3,7 @@
 #include <iostream>
 #include "Arvore.h"
 #include "Hashtable.h"
+#include "Node.h"
 
 Hashtable::Hashtable() {
 }
@@ -90,6 +91,23 @@ void Hashtable::insert(IHashble* o) {
 
 	if (the_array[place_to_go] == NULL)
 		the_array[place_to_go] = new Arvore();
+	else
+	{
+		IHashble** ih = the_array[place_to_go]->getElements(length);
+		for (int i3 = 0; i3 < the_array[place_to_go]->getInd(); i3++)
+		{			
+			Node<std::string>* n1 = ((Node<std::string>*)
+				ih[i3]);
+			Node<std::string>* n2 = ((Node<std::string>*)
+				o);
+
+			if (n1->key == n2->key)
+			{
+				cout << "\nRepeated key. Throwing exception.\n";
+				throw new exception("repeated key");
+			}
+		}
+	}
 
 	the_array[place_to_go]->insert(o);
 	count++;

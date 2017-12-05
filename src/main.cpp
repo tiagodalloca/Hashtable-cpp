@@ -69,8 +69,7 @@ int main() {
 		{
 			incAt = 97;
 			cont = 0;
-		}
-			
+		}			
 
 		if (c == 122)
 		{
@@ -81,23 +80,22 @@ int main() {
 		std::string* strp = new std::string(str);
 
 		char c2 = i + 48;
-		char *c2p = new char(c2);
+		char* cp = (char*)malloc(sizeof(char));
+		cp[0] = c2;
+		cp[1] = '\0';
 
-		stringao* s = new stringao(c2p);
+		stringao* s = new stringao(cp);
+		Node<std::string>* nP = (new Node<std::string>(strp, s));
 
 		h->insert
-		(new Node<std::string>(strp,s));
+		(nP);
 	}
-
-
-
 
 	cout << '\n' << h->count;
 
 	cout << "\n\n\n\n\n\n\n" + h->toString();
 
 	cin >> str;
-
 
 	return 0;
 }
