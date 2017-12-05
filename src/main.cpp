@@ -24,46 +24,29 @@ public:
 };
 
 int main() {
+	std::string str;
+	int incAt = 65;
+	int cont = 0;
 	Hashtable* h = new Hashtable(
 		10, //unsigned int initial_length,
 		10, //unsigned int initial_growth_rate,
-		0.5, //float initial_max_occupation_rate,
+		0.8, //float initial_max_occupation_rate,
 		3,  //unsigned int initial_max_tree_size,
 		10  //unsigned int initial_max_exceeded_trees
 	);
-	h->
-		insert(
-			new Node<std::string>(
-				new std::string("a"),
-				new stringao("0")));
-	h->insert
-	(new Node<std::string>(new std::string("b"), new stringao("1")));
 
-	h->insert
-	(new Node<std::string>(new std::string("c"), new stringao("2")));
 
-	h->insert
-	(new Node<std::string>(new std::string("d"), new stringao("3")));
-
-	h->insert
-	(new Node<std::string>(new std::string("e"), new stringao("4")));
-
-	h->insert
-	(new Node<std::string>(new std::string("f"), new stringao("5")));
-
-	std::string str = *(((Node<std::string>*)
+	if(((Node<std::string>*)
 		h->get(
-			new stringao("0")))
-		->info);
+			new stringao("0"))) != NULL)
+	{
+		str = *(((Node<std::string>*)
+			h->get(
+				new stringao("0")))
+			->info);
 
-	cout << str << '\n';
-
-	std::string str2 = *(((Node<std::string>*)
-		h->get(
-			new stringao("1")))
-		->info);
-
-	cout << str2 << '\n';
+		cout << str << '\n';
+	}
 
 	h->remove(new stringao("0"));
 
@@ -77,14 +60,37 @@ int main() {
 	else
 		cout << "\n\nNao dah pra excluir algo que nao existe";
 
-	h->insert
-	(new Node<std::string>(new std::string("300"), new stringao("300000")));
-	std::string str3 = *(((Node<std::string>*)
-		h->get(
-			new stringao("300000")))
-		->info);
 
-	cout << '\n' << str3 << '\n';
+	for (int i = 0; i < 500; i++)
+	{
+		char c = cont++ + incAt;
+		
+		if (c == 90)
+		{
+			incAt = 97;
+			cont = 0;
+		}
+			
+
+		if (c == 122)
+		{
+			incAt = 65;
+			cont = 0;
+		}
+		std::string str(1, c);
+		std::string* strp = new std::string(str);
+
+		char c2 = i + 48;
+		char *c2p = new char(c2);
+
+		stringao* s = new stringao(c2p);
+
+		h->insert
+		(new Node<std::string>(strp,s));
+	}
+
+
+
 
 	cout << '\n' << h->count;
 

@@ -30,7 +30,7 @@ public:
 	unsigned int getCount() const;
 	unsigned int getInd() const;
 	unsigned int getHeight() const;
-	IHashble** getElements();
+	IHashble** getElements(int len);
 	IHashble* get(IHashble* o) const;
 
 	void insert(IHashble* o);

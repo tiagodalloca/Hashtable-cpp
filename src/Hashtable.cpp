@@ -67,7 +67,7 @@ void Hashtable::grow()
 		if (oldArray[i] != NULL)
 			for (int i2 = 0; i2 < oldArray[i]->getCount(); i2++)
 			{
-				IHashble** atuais = oldArray[i]->getElements();
+				IHashble** atuais = oldArray[i]->getElements(oldLength);
 				for (int i3 = 0; i3 < oldArray[i]->getInd(); i3++)
 				{
 					this->insert(atuais[i3]);

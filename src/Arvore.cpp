@@ -56,8 +56,8 @@ std::string Arvore::toStringAux(const NodeA *no) const {
 	return str;
 }
 
-IHashble** Arvore::getElements() {
-	IHashble** aux = (IHashble**)malloc(sizeof(Arvore*));
+IHashble** Arvore::getElements(int len) {
+	IHashble** aux = (IHashble**)malloc(len*sizeof(IHashble*));
 	ind = 0;
 	getElementsAux(root, aux);
 	return aux;
